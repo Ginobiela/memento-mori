@@ -1,6 +1,8 @@
 export const LIFE_YEARS = 80;
 export const WEEKS_PER_YEAR = 52;
 export const TOTAL_WEEKS = LIFE_YEARS * WEEKS_PER_YEAR;
+export const SLEEP_HOURS_PER_DAY = 8;
+export const AWAKE_HOURS_PER_DAY = 24 - SLEEP_HOURS_PER_DAY;
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
@@ -80,15 +82,29 @@ export function getWeeksAlive(birthDate, atDate = new Date()) {
   return Math.min(TOTAL_WEEKS, Math.floor(daysAlive / 7));
 }
 
+export function getWeeksAwake(birthDate, atDate = new Date()) {
+  const daysAlive = getDaysAlive(birthDate, atDate);
+  if (daysAlive < 0) throw new RangeError("La fecha de nacimiento no puede ser futura");
+
+  // Keep the awake/sleep split inside the same 80 × 52 visual calendar.
+  const representedDays = Math.min(daysAlive, TOTAL_WEEKS * 7);
+  return Math.floor((representedDays * AWAKE_HOURS_PER_DAY) / (24 * 7));
+}
+
 export function calculateLifeSnapshot(birthDate, atDate = new Date()) {
   const age = getFullYears(birthDate, atDate);
   const daysAlive = getDaysAlive(birthDate, atDate);
   if (daysAlive < 0) throw new RangeError("La fecha de nacimiento no puede ser futura");
 
+  const weeksAlive = Math.min(TOTAL_WEEKS, Math.floor(daysAlive / 7));
+  const weeksAwake = getWeeksAwake(birthDate, atDate);
+
   return {
     age,
     daysAlive,
-    weeksAlive: Math.min(TOTAL_WEEKS, Math.floor(daysAlive / 7)),
+    weeksAlive,
+    weeksAwake,
+    weeksAsleep: weeksAlive - weeksAwake,
   };
 }
 
