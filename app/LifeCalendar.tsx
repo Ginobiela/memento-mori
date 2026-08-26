@@ -10,7 +10,6 @@ import {
 } from "react";
 import {
   LIFE_YEARS,
-  SLEEP_HOURS_PER_DAY,
   TOTAL_WEEKS,
   WEEKS_PER_YEAR,
   calculateLifeSnapshot,
@@ -41,7 +40,6 @@ export function LifeCalendar() {
   const [isEditing, setIsEditing] = useState(false);
   const [resetArmed, setResetArmed] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
-  const [showAwakeWeeks, setShowAwakeWeeks] = useState(false);
   const ageInputRef = useRef<HTMLInputElement>(null);
   const birthDateInputRef = useRef<HTMLInputElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -91,27 +89,19 @@ export function LifeCalendar() {
     return WEEK_INDEXES.map((weekIndex) => {
       const details = getWeekDetails(birthDate, weekIndex);
       const isLived = weekIndex < snapshot.weeksAlive;
-      const isSleep = showAwakeWeeks && isLived && weekIndex >= snapshot.weeksAwake;
-      const isCurrent = snapshot.weeksAlive > 0 && weekIndex === snapshot.weeksAlive - 1;
-      const phase = showAwakeWeeks
-        ? isSleep
-          ? `Sueño estimado (${SLEEP_HOURS_PER_DAY} h/día)`
-          : isLived
-            ? "Tiempo despierto"
-            : "Tiempo futuro"
-        : null;
+      const isCurrent = weekIndex === snapshot.weeksAlive;
 
       return (
         <span
           aria-hidden="true"
-          className={`week${isLived ? " week--lived" : ""}${isSleep ? " week--sleep" : ""}${isCurrent ? " week--current" : ""}`}
-          data-tooltip={`Semana ${details.number}\n${details.dateRange}\nEdad: ${details.age} años${phase ? `\n${phase}` : ""}`}
+          className={`week${isLived ? " week--lived" : ""}${isCurrent ? " week--current" : ""}`}
+          data-tooltip={`Semana ${details.number}\n${details.dateRange}\nEdad: ${details.age} años`}
           data-week=""
           key={weekIndex}
         />
       );
     });
-  }, [birthDate, showAwakeWeeks, snapshot]);
+  }, [birthDate, snapshot]);
 
   function continueToBirthDate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -287,36 +277,14 @@ export function LifeCalendar() {
           <p className="poster__status" aria-live="polite">
             <span>{snapshot.age} años</span>
             <span aria-hidden="true">·</span>
-            <span>
-              {showAwakeWeeks
-                ? `${formatNumber(snapshot.weeksAwake)} semanas despierto`
-                : `${formatNumber(snapshot.weeksAlive)} semanas vividas`}
-            </span>
+            <span>{formatNumber(snapshot.weeksAlive)} semanas vividas</span>
           </p>
-          <label className="sleep-toggle">
-            <input
-              checked={showAwakeWeeks}
-              onChange={(event) => setShowAwakeWeeks(event.target.checked)}
-              type="checkbox"
-            />
-            <span aria-hidden="true" className="sleep-toggle__mark" />
-            <span>Mostrar tiempo despierto · descontar {SLEEP_HOURS_PER_DAY} h de sueño por día</span>
-          </label>
-          {showAwakeWeeks ? (
-            <p className="sleep-toggle__detail">
-              {formatNumber(snapshot.weeksAsleep)} semanas de sueño estimado al final de la cuadrícula.
-            </p>
-          ) : null}
         </header>
 
         <section className="calendar-region" aria-label="Calendario de vida">
           <p className="mobile-scroll-hint">Deslizá para recorrer las 52 semanas →</p>
           <div
-            aria-label={`Cuadrícula de ${LIFE_YEARS} años por ${WEEKS_PER_YEAR} semanas. ${
-              showAwakeWeeks
-                ? `${formatNumber(snapshot.weeksAwake)} semanas despierto y ${formatNumber(snapshot.weeksAsleep)} semanas de sueño estimado.`
-                : `${formatNumber(snapshot.weeksAlive)} semanas completas vividas.`
-            }`}
+            aria-label={`Cuadrícula de ${LIFE_YEARS} años por ${WEEKS_PER_YEAR} semanas. ${formatNumber(snapshot.weeksAlive)} semanas completas vividas.`}
             className="calendar-scroll"
           >
             <div className="calendar-canvas">
