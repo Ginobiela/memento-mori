@@ -2,6 +2,7 @@ import {
   FormEvent,
   PointerEvent as ReactPointerEvent,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -17,16 +18,40 @@ import {
 import {
   clearBirthDate,
   readBirthDate,
+  readTheme,
   saveBirthDate,
+  saveTheme,
 } from "./lib/storage.js";
 
 const AGE_MARKERS = Array.from({ length: 16 }, (_, index) => (index + 1) * 5);
 const WEEK_INDEXES = Array.from({ length: TOTAL_WEEKS }, (_, index) => index);
 
 type OnboardingStep = "age" | "birth-date";
+type Theme = "light" | "dark";
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat("es-AR").format(value);
+}
+
+function ThemeToggle({
+  onToggle,
+  theme,
+}: {
+  onToggle: () => void;
+  theme: Theme;
+}) {
+  const nextTheme = theme === "dark" ? "claro" : "oscuro";
+
+  return (
+    <button
+      aria-label={`Activar modo ${nextTheme}`}
+      className="theme-toggle"
+      onClick={onToggle}
+      type="button"
+    >
+      Modo {nextTheme}
+    </button>
+  );
 }
 
 export function LifeCalendar() {
@@ -38,11 +63,23 @@ export function LifeCalendar() {
   const [isEditing, setIsEditing] = useState(false);
   const [resetArmed, setResetArmed] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [theme, setTheme] = useState<Theme>(() => {
+    const storedTheme = readTheme();
+    if (storedTheme === "light" || storedTheme === "dark") return storedTheme;
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  });
   const ageInputRef = useRef<HTMLInputElement>(null);
   const birthDateInputRef = useRef<HTMLInputElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const todayInput = useMemo(() => formatDateInput(), []);
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    saveTheme(theme);
+  }, [theme]);
 
   useEffect(() => {
     const loadStoredDate = window.setTimeout(() => {
@@ -261,6 +298,10 @@ export function LifeCalendar() {
 
           <p className="privacy-note">Tu fecha queda guardada sólo en este dispositivo.</p>
         </section>
+        <ThemeToggle
+          onToggle={() => setTheme((current) => current === "dark" ? "light" : "dark")}
+          theme={theme}
+        />
       </main>
     );
   }
@@ -324,6 +365,10 @@ export function LifeCalendar() {
       </article>
 
       <div aria-hidden="true" className="week-tooltip" ref={tooltipRef} />
+      <ThemeToggle
+        onToggle={() => setTheme((current) => current === "dark" ? "light" : "dark")}
+        theme={theme}
+      />
     </main>
   );
 }

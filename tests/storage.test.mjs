@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   BIRTH_DATE_STORAGE_KEY,
+  THEME_STORAGE_KEY,
   clearBirthDate,
   readBirthDate,
+  readTheme,
   saveBirthDate,
+  saveTheme,
 } from "../app/lib/storage.js";
 
 function memoryStorage() {
@@ -33,4 +36,16 @@ test("reset removes the locally stored date", () => {
   saveBirthDate("2001-03-12", storage);
   clearBirthDate(storage);
   assert.equal(readBirthDate(storage), null);
+});
+
+test("the selected color theme persists locally", () => {
+  const storage = memoryStorage();
+  saveTheme("dark", storage);
+  assert.equal(readTheme(storage), "dark");
+});
+
+test("invalid stored themes are ignored", () => {
+  const storage = memoryStorage();
+  storage.setItem(THEME_STORAGE_KEY, "sepia");
+  assert.equal(readTheme(storage), null);
 });

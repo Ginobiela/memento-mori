@@ -6,7 +6,7 @@ La aplicación pide la edad como primer paso y usa la fecha de nacimiento como f
 
 ## Persistencia y privacidad
 
-La fecha de nacimiento se guarda únicamente en `localStorage`, con la clave `memento-mori.birth-date.v1`. No se envía a ningún servidor.
+La fecha de nacimiento y la preferencia de tema se guardan únicamente en `localStorage`, con las claves `memento-mori.birth-date.v1` y `memento-mori.theme.v1`. No se envía ningún dato a servidores.
 
 El almacenamiento del navegador está aislado por dominio. Por eso, el dato guardado en el hosting anterior no se copia automáticamente a `github.io`: permanece en el dominio anterior y debe ingresarse una vez en la nueva URL. Después de hacerlo, seguirá persistiendo localmente en GitHub Pages.
 

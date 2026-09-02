@@ -4,7 +4,20 @@
   --muted: #6d6c67;
   --hairline: rgba(23, 23, 21, 0.28);
   --soft-line: rgba(23, 23, 21, 0.14);
+  --placeholder: #aaa9a4;
+  --scrollbar: rgba(23, 23, 21, 0.24);
   color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --paper: #151513;
+  --ink: #eeece5;
+  --muted: #aaa89f;
+  --hairline: rgba(238, 236, 229, 0.32);
+  --soft-line: rgba(238, 236, 229, 0.16);
+  --placeholder: #74736d;
+  --scrollbar: rgba(238, 236, 229, 0.25);
+  color-scheme: dark;
 }
 
 * {
@@ -21,6 +34,11 @@ body {
   color: var(--ink);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+html,
+body {
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
 button,
@@ -116,7 +134,7 @@ input:focus-visible {
 }
 
 .onboarding__form input::placeholder {
-  color: #aaa9a4;
+  color: var(--placeholder);
 }
 
 .onboarding__form input:focus {
@@ -228,7 +246,7 @@ input:focus-visible {
   max-width: 100%;
   overflow-x: auto;
   padding: 0.35rem 0.35rem 0.8rem;
-  scrollbar-color: rgba(23, 23, 21, 0.24) transparent;
+  scrollbar-color: var(--scrollbar) transparent;
   scrollbar-width: thin;
   width: max-content;
 }
@@ -340,6 +358,31 @@ input:focus-visible {
   opacity: 1;
 }
 
+.theme-toggle {
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  border: 1px solid var(--soft-line);
+  border-radius: 0;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  color: var(--muted);
+  font-size: 0.57rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  padding: 0.7rem 0.8rem;
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  text-transform: uppercase;
+  transition:
+    background-color 160ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+  z-index: 30;
+}
+
+.theme-toggle:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
 @media (max-width: 42rem) {
   .poster-shell {
     padding-inline: 1rem;
@@ -375,6 +418,7 @@ input:focus-visible {
     align-items: flex-start;
     flex-direction: column;
     gap: 1rem;
+    padding-bottom: 3.5rem;
   }
 }
 
