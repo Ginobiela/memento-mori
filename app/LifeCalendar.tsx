@@ -1,5 +1,3 @@
-"use client";
-
 import {
   FormEvent,
   PointerEvent as ReactPointerEvent,
@@ -180,7 +178,7 @@ export function LifeCalendar() {
     if (tooltipRef.current) tooltipRef.current.dataset.visible = "false";
   }
 
-  if (!hasLoaded || !birthDate || isEditing) {
+  if (!hasLoaded || !birthDate || !snapshot || isEditing) {
     return (
       <main className={`onboarding${hasLoaded ? " onboarding--ready" : ""}`}>
         <section className="onboarding__content" aria-labelledby="onboarding-title">

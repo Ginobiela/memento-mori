@@ -14,10 +14,17 @@
 # testing
 /coverage
 
-# next.js
+# build output
+/dist/
+/out/
+/.vite/
+*.tsbuildinfo
+
+# legacy local build artifacts (not used by GitHub Pages)
 /.next/
 /.vinext/
-/out/
+/.wrangler/
+/work/
 
 # misc
 .DS_Store
@@ -32,10 +39,6 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# vercel
+# platform-local files
 .vercel
-
-/dist/
-/.wrangler/
 /outputs/
-/work/
