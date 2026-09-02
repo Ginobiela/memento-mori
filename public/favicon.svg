@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Memento Mori</title>
+  <mask id="skull-mask">
+    <rect width="64" height="64" fill="black" />
+    <path
+      fill="white"
+      d="M32 4C17.9 4 8 14.1 8 28.1c0 8.6 4.1 15.2 10.5 19.2V55c0 3.3 2.7 6 6 6h15c3.3 0 6-2.7 6-6v-7.7C51.9 43.3 56 36.7 56 28.1 56 14.1 46.1 4 32 4Z"
+    />
+    <ellipse cx="21.8" cy="31" rx="7.2" ry="8" fill="black" />
+    <ellipse cx="42.2" cy="31" rx="7.2" ry="8" fill="black" />
+    <path fill="black" d="m32 38-5 7h10l-5-7Z" />
+    <path stroke="black" stroke-width="2.5" d="M25 51v9m7-9v10m7-10v9" />
+  </mask>
+  <rect width="64" height="64" fill="#171714" mask="url(#skull-mask)" />
+</svg>

@@ -7,6 +7,7 @@ test("the production build contains a portable static entry point", async () => 
 
   assert.match(html, /<title>Memento Mori — Calendario de vida<\/title>/i);
   assert.match(html, /<div id="root"><\/div>/i);
+  assert.match(html, /<link[^>]+rel="icon"[^>]+href="[^"]*\/favicon\.svg"/i);
   assert.match(html, /<script[^>]+src="[^"]*\/assets\/[^"]+\.js"/i);
   assert.match(html, /<link[^>]+href="[^"]*\/assets\/[^"]+\.css"/i);
   assert.doesNotMatch(html, /_next|_vinext|ginitokun|chatgpt\.site/i);
